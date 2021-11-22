@@ -1,0 +1,22 @@
+.center{
+    text-align: center;
+}
+
+.pl{
+    margin: 3px;
+}
+
+body{
+    background-image: url(img/Anime_bg.jpg);
+    background-size: cover;
+}
+
+#error_message{
+    color:red; 
+    text-align:center;
+}
+
+#success_message{
+    color:green; 
+    text-align:center;
+}
