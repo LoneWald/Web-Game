@@ -1,12 +1,15 @@
 <?php
 require_once("checkAuthorize.php");
 session_start();
+$_SESSION['FieldWidth'] = isset($_SESSION['FieldWidth']) ? $_SESSION['FieldWidth'] : 10;
+$_SESSION['FieldHeight'] = isset($_SESSION['FieldHeight']) ? $_SESSION['FieldHeight'] : 10;
+
 $playerField = isset($_SESSION['PlayerField']) ? $_SESSION['PlayerField'] : null;
 if (!$playerField) {
     $playerField = array();
-    for ($y = 0; $y < 5; $y++) {
+    for ($y = 0; $y < $_SESSION['FieldHeight']; $y++) {
         $playerField[$y] = array();
-        for ($x = 0; $x < 5; $x++) {
+        for ($x = 0; $x < $_SESSION['FieldWidth']; $x++) {
             array_push($playerField[$y], false);
         }
     }
@@ -20,91 +23,65 @@ $params = $_GET + $_POST;
 if (isset($params['action'])) {
     $action = $params['action'];
     if ($action == 'change') {
-        if ($_SESSION['PlayerField'][$params['x']][$params['y']] == 1) {
-            $_SESSION['PlayerField'][$params['x']][$params['y']] = 0;
-        } else
-        {
-            $_SESSION['PlayerField'][(int)$params['x']][(int)$params['y']] = 1;
+        if ($_SESSION['PlayerField'][$params['y']][$params['x']] == 1) {
+            $_SESSION['PlayerField'][$params['y']][$params['x']] = 0;
+        } else {
+            $_SESSION['PlayerField'][(int)$params['y']][(int)$params['x']] = 1;
         }
         //$playerField[(int)$params['x']][(int)$params['y']] = !$playerField[(int)$params['x']][(int)$params['y']];
     }
+    if ($action == 'setSize') {
+        $_SESSION['FieldWidth'] = $params['width'];
+        $_SESSION['FieldHeight'] = $params['height'];
+        $playerField = array();
+        for ($y = 0; $y < $_SESSION['FieldHeight']; $y++) {
+            $playerField[$y] = array();
+            for ($x = 0; $x < $_SESSION['FieldWidth']; $x++) {
+                array_push($playerField[$y], false);
+            }
+        }
+        $_SESSION['PlayerField'] = $playerField;
+    }
 }
-//print_r($_SESSION['PlayerField']);
-$height = 5;
-$width = 5;
+// print_r($_SESSION['PlayerField']);
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <style>
-        .field {
-            overflow: hidden;
-            display: inline-block;
-            margin: 10px 30px 10px 30px;
-        }
-
-        .row {
-            clear: both;
-        }
-
-        .cell {
-            float: left;
-            border: 1px solid #ccc;
-            width: 20px;
-            height: 20px;
-            position: relative;
-            text-align: center;
-        }
-
-        .cell p {
-            position: relative;
-            text-align: center;
-        }
-
-        .cell a {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0
-        }
-
-        .cell a:hover {
-            background: #ccc;
-        }
-
-        .selected {
-            background-color: #8c4;
-        }
-
-        .unSelected {
-            background-color: #55f;
-        }
-    </style>
-    <h1>Расставьте корабли</h1>
-    <div class="field">
-        <?php for ($y = 0; $y < $height; $y++) { ?>
-            <div class="row">
-                <?php for ($x = 0; $x < $width; $x++) {
-                    if ($_SESSION['PlayerField'][$x][$y] == 1)
-                        $selected = true;
-                    else
-                        $selected = false;
-                    $class = ($selected ? ' selected' : ' unSelected');
-                ?>
-                    <div class="cell<?php echo $class ?>">
-                        <a href="?action=change&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
-                    </div>
-                <?php } ?>
-            </div>
-        <?php } ?>
+    <div class="window">
+        <h1>Расставьте корабли</h1>
+        <div>
+        <a href="?action=setSize&amp;width=8&amp;height=8">8x8</a>
+        <a href="?action=setSize&amp;width=10&amp;height=10">10x10</a>
+        <a href="?action=setSize&amp;width=15&amp;height=15">15x15</a>
+        <a href="?action=setSize&amp;width=20&amp;height=20">20x20</a>
+        </div>
+        <div class="field">
+            <?php for ($y = 0; $y < count($_SESSION['PlayerField']); $y++) { ?>
+                <div class="row">
+                    <?php for ($x = 0; $x < count($_SESSION['PlayerField'][0]); $x++) {
+                        if ($_SESSION['PlayerField'][$y][$x] == 1)
+                            $selected = true;
+                        else
+                            $selected = false;
+                        $class = ($selected ? ' selected' : ' unSelected');
+                    ?>
+                        <div class="cell<?php echo $class ?>">
+                            <a href="?action=change&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
+        <div>
+        <a href="./game.php">Начать</a>
+        </div>
     </div>
-    <a href="./game.php">Начать</a>
-
 </body>
 
 </html>

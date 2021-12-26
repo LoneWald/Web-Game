@@ -25,3 +25,133 @@ td {
     width: 20px;
     height: 20px;
   }
+
+/* prepareToBattle.php */
+
+.window {
+    text-align: center;
+}
+.field {
+    overflow: hidden;
+    display: inline-block;
+    margin: 10px 30px 10px 30px;
+}
+
+.row {
+    clear: both;
+}
+
+.cell {
+    float: left;
+    border: 1px solid #ccc;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    text-align: center;
+}
+
+.cell p {
+    position: relative;
+    text-align: center;
+}
+
+.cell a {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0
+}
+
+.cell a:hover {
+    background: #ccc;
+}
+
+.selected {
+    background-color: #8c4;
+}
+
+.unSelected {
+    background-color: #55f;
+}
+
+/* game.php */
+.PlayField {}
+
+        .playerField,
+        .enemyField {
+            overflow: hidden;
+            display: inline-block;
+            margin: 10px 30px 10px 30px;
+        }
+
+        .row {
+            clear: both;
+        }
+
+        .playerFieldCell,
+        .enemyFieldCell {
+            float: left;
+            border: 1px solid #ccc;
+            width: 20px;
+            height: 20px;
+            position: relative;
+            text-align: center;
+        }
+
+        .playerFieldCell p {
+            position: relative;
+            text-align: center;
+        }
+
+        .enemyFieldCell a {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0
+        }
+
+        .enemyFieldCell a:hover {
+            background: #ccc;
+        }
+
+        .enemyFieldCell.winner {
+            background: #f00;
+        }
+
+        .icon {
+            display: inline-block;
+        }
+
+        .player1:after {
+            content: 'X';
+        }
+
+        .player2:after {
+            content: 'O';
+        }
+
+        .emptyCell {
+            background-color: #55f;
+        }
+
+        .missCell {
+            background-color: #aaa;
+        }
+
+        .undetectedCell {
+            background-color: #8c4;
+        }
+
+        .hitCell {
+            background-color: #f00;
+        }
+
+        .playerCell {}
+
+        .disabled {
+            pointer-events: none; /* делаем элемент неактивным для взаимодействия */
+            cursor: default; /*  курсор в виде стрелки */
+            color: #888;/* цвет текста серый */
+            }

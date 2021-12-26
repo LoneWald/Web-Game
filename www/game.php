@@ -6,24 +6,24 @@ session_start();
 // Если игры еще нет, создаём новую.
 $game = isset($_SESSION['game']) ? $_SESSION['game'] : null;
 if (!$game || !is_object($game)) {
-    $game = new SeaBattle($_SESSION['PlayerField']);
+    $height = count($_SESSION['PlayerField']);
+    $width = count($_SESSION['PlayerField'][0]);
+    $game = new SeaBattle($_SESSION['PlayerField'], $width, $height);
 }
 
-// Обрабатываем запрос пользователя, выполняя нужное действие.
+// Добавляем вновь созданную игру в сессию.
+$_SESSION['game'] = $game;
+
+// Обрабатываем запрос пользователя
 $params = $_GET + $_POST;
 if (isset($params['action'])) {
     $action = $params['action'];
 
     if ($action == 'move') {
         // Обрабатываем ход пользователя.
-        $game->makeShot((int)$params['x'], (int)$params['y']);
-    } else if ($action == 'newGame') {
-        // Пользователь решил начать новую игру.
-        $game = new SeaBattle($_SESSION['PlayerField']);
+        $game->makeShot((int)$params['y'], (int)$params['x']);
     }
 }
-// Добавляем вновь созданную игру в сессию.
-$_SESSION['game'] = $game;
 
 
 // Отображаем текущее состояние игры в виде HTML страницы.
@@ -37,155 +37,80 @@ $winner = $game->getWinner();
 <html>
 
 <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-
-    <!-- Отображаем состояние игры и игровое поле. -->
-
-    <!-- CSS-стили, задающие внешний вид элементов HTML. -->
-    <style type="text/css">
-        .PlayField {}
-
-        .playerField,
-        .enemyField {
-            overflow: hidden;
-            display: inline-block;
-            margin: 10px 30px 10px 30px;
-        }
-
-        .row {
-            clear: both;
-        }
-
-        .playerFieldCell,
-        .enemyFieldCell {
-            float: left;
-            border: 1px solid #ccc;
-            width: 20px;
-            height: 20px;
-            position: relative;
-            text-align: center;
-        }
-
-        .playerFieldCell p {
-            position: relative;
-            text-align: center;
-        }
-
-        .enemyFieldCell a {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0
-        }
-
-        .enemyFieldCell a:hover {
-            background: #ccc;
-        }
-
-        .enemyFieldCell.winner {
-            background: #f00;
-        }
-
-        .icon {
-            display: inline-block;
-        }
-
-        .player1:after {
-            content: 'X';
-        }
-
-        .player2:after {
-            content: 'O';
-        }
-
-        .emptyCell {
-            background-color: #55f;
-        }
-
-        .missCell {
-            background-color: #aaa;
-        }
-
-        .undetectedCell{
-            background-color: #8c4;
-        }
-
-        .hitCell {
-            background-color: #f00;
-        }
-
-        .playerCell {}
-    </style>
-
-
-
-
+    <div class="window">
     <?php if ($winner) {
+        $disabled = " disabled";
         if ($winner == 1) { ?>
             <!-- Отображаем сообщение о победителе -->
-            Победил Игрок!
+            <h1 style="color: green;">Победил Игрок!</h1>
         <?php } else { ?>
-            Победил Компьютер!
+            <h1 style="color: red;">Победил Компьютер!</h1>
         <?php } ?>
-    <?php } ?>
-    <!-- Player Field -->
-    <div class="PlayField">
-        <div class="playerField">
-            <?php for ($y = 0; $y < $height; $y++) { ?>
-                <div class="row">
-                    <?php for ($x = 0; $x < $width; $x++) {
-                        $playerCell = $playerField[$x][$y];
-                        switch ($playerCell) {
-                            case 3:
-                                $class = " hitCell";
-                                break;
-                            case 2:
-                                $class = " missCell";
-                                break;
-                            case 1:
-                                $class = " undetectedCell";
-                                break;
+    <?php } else { ?>
+        <h1>Атакуйте!</h1>
+        <?php } ?>
+        <!-- Player Field -->
+        <div class="PlayField">
+            <div class="playerField">
+                <?php for ($y = 0; $y < $height; $y++) { ?>
+                    <div class="row">
+                        <?php for ($x = 0; $x < $width; $x++) {
+                            $playerCell = $playerField[$y][$x];
+                            switch ($playerCell) {
+                                case 3:
+                                    $class = " hitCell";
+                                    break;
+                                case 2:
+                                    $class = " missCell";
+                                    break;
+                                case 1:
+                                    $class = " undetectedCell";
+                                    break;
                                 case 0:
                                     $class = " emptyCell";
                                     break;
-                        }
-                    ?>
-                        <div class="playerFieldCell<?php echo $class ?>">
-                            <div><?php //echo $playerCell ?></div>
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php } ?>
-        </div>
-        <!-- Enemy Field -->
-        <div class="enemyField">
-            <?php for ($x = 0; $x < $height; $x++) { ?>
-                <div class="row">
-                    <?php for ($y = 0; $y < $width; $y++) {
+                            }
+                        ?>
+                            <div class="playerFieldCell<?php echo $class ?>">
+                                <div><?php //echo $playerCell 
+                                        ?></div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
+            <!-- Enemy Field -->
+            <div class="enemyField">
+                <?php for ($y = 0; $y < $height; $y++) { ?>
+                    <div class="row">
+                        <?php for ($x = 0; $x < $width; $x++) {
 
-                        $shottedField = isset($field[$x][$y]) ? $field[$x][$y] : null;
-                        if ($shottedField === null)
-                            $class = ' ';
-                        else if ($shottedField == 2) {
-                            $class = ' missCell';
-                        } else
-                            $class = ' hitCell';
-                    ?>
-                        <div class="enemyFieldCell<?php echo $class ?>">
-                            <?php if ($shottedField === null) { ?>
-                                <a href="?action=move&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
-                            <?php } ?>
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php } ?>
+                            $shottedField = isset($field[$y][$x]) ? $field[$y][$x] : null;
+                            if ($shottedField === null)
+                                $class = ' emptyCell';
+                            else if ($shottedField == 2) {
+                                $class = ' missCell';
+                            } else
+                                $class = ' hitCell';
+                        ?>
+                            <div class="enemyFieldCell<?php echo $class ?>">
+                                <?php if ($shottedField === null) { ?>
+                                    <a class="<?php echo $disabled ?>" href="?action=move&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+        <div>
+            <br /><a href="./restart.php">Начать новую игру</a>
         </div>
     </div>
-    <br /><a href="./restart.php">Начать новую игру</a>
-
 </body>
 
 </html>

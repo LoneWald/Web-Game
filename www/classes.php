@@ -6,8 +6,8 @@
 class SeaBattle
 {
     private $bot;
-    private $fieldWidth = 5;
-    private $fieldHeight = 5;
+    private $fieldWidth;
+    private $fieldHeight;
     private $difficult = "Easy";
     private $shotField = array();
     private $enemyField = array(
@@ -17,15 +17,7 @@ class SeaBattle
         array(0, 0, 0, 0, 0),
         array(0, 0, 0, 0, 0)
     );
-
-    private $playerField = array(
-        array(1, 0, 0, 0, 0),
-        array(0, 0, 1, 1, 0),
-        array(1, 0, 0, 0, 0),
-        array(1, 0, 0, 0, 0),
-        array(1, 0, 1, 1, 0)
-    );
-
+    private $playerField;
     private $SHIPS_CELLS_TO_WIN = 3;
 
     /**
@@ -42,12 +34,14 @@ class SeaBattle
     private $currentPlayer = 1; // 1 или 2, а после окончания игры - null.
     private $winner = null; // после окончания игры будет содержать 1 или 2.
 
-    function __construct(array $playerField) {
+    function __construct($playerField, $fieldWidth, $fieldHeight) {
         $this->playerField = $playerField;
+        $this->fieldWidth = $fieldWidth;
+        $this->fieldHeight = $fieldHeight;
         $this->bot = new Bot("Easy", $this->fieldWidth, $this->fieldHeight);
     }
 
-    public function makeShot($x, $y)
+    public function makeShot($y, $x)
     {
         // Учитываем ход, если выполняются все условия:
         // 1) игра ещё идет,
@@ -60,13 +54,13 @@ class SeaBattle
             &&
             $y >= 0 && $y < $this->fieldHeight
             &&
-            empty($this->shotField[$x][$y])
+            empty($this->shotField[$y][$x])
         ) {
             $current = $this->currentPlayer;
-            if ($this->enemyField[$x][$y] == 0) {
-                $this->shotField[$x][$y] = 2;
+            if ($this->enemyField[$y][$x] == 0) {
+                $this->shotField[$y][$x] = 2;
             } else {
-                $this->shotField[$x][$y] = 3;
+                $this->shotField[$y][$x] = 3;
             }
             if(!$this->checkWinner()){
                 // Ход компьютера
@@ -158,19 +152,19 @@ class Bot
             }
         }
         $rand = rand(0, count($array) - 1);
-        $fieldX = $array[$rand][0];
-        $fieldY = $array[$rand][1];
+        $fieldX = $array[$rand][1];
+        $fieldY = $array[$rand][0];
         // $fieldX = rand(0, $this->fieldWidth - 1);
         // $fieldY = rand(0, $this->fieldHeight - 1);
         // while ($field[$fieldX][$fieldY] == 2 || $field[$fieldX][$fieldY] == 3){
         //     $fieldX = rand(0, $this->fieldWidth - 1);
         //     $fieldY = rand(0, $this->fieldHeight - 1);
         // }
-        if ($field[$fieldX][$fieldY] == 0 || $field[$fieldX][$fieldY] == null) {
-            $field[$fieldX][$fieldY] = 2;
+        if ($field[$fieldY][$fieldX] == 0 || $field[$fieldY][$fieldX] == null) {
+            $field[$fieldY][$fieldX] = 2;
         } else
         {
-            $field[$fieldX][$fieldY] = 3;
+            $field[$fieldY][$fieldX] = 3;
         }
         return $field;
     }
