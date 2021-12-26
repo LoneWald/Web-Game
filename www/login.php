@@ -19,7 +19,7 @@ function check($login, $password)
         $arr = $sql->fetch(PDO::FETCH_ASSOC);   // Получить строку из response
         setcookie("login", $arr["login"]);      // Сохраняем куки
         setcookie("password", $arr["password"]);
-        header("Location: game.php");           // Переход на игру
+        header("Location: prepareToBattle.php");           // Переход на игру
         echo "<div id='success_message'><h2 >Добро пожаловать!</h2></div>";
     } else {
         setcookie("login", "", time() - 3600, "/");             // Очищаем куки если они были(и не были, на всякий)

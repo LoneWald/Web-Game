@@ -6,10 +6,10 @@
     margin: 3px;
 }
 
-body{
+/* body{
     background-image: url(img/Anime_bg.jpg);
     background-size: cover;
-}
+} */
 
 #error_message{
     color:red; 
@@ -20,3 +20,8 @@ body{
     color:green; 
     text-align:center;
 }
+
+td {
+    width: 20px;
+    height: 20px;
+  }
