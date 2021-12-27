@@ -1,9 +1,11 @@
 <?php
 require_once("checkAuthorize.php");
+require_once("classes.php");
 session_start();
 $_SESSION['FieldWidth'] = isset($_SESSION['FieldWidth']) ? $_SESSION['FieldWidth'] : 10;
 $_SESSION['FieldHeight'] = isset($_SESSION['FieldHeight']) ? $_SESSION['FieldHeight'] : 10;
-
+$_SESSION['Checker'] = isset($_SESSION['Checker']) ? $_SESSION['Checker'] : new Checker();
+$checker = $_SESSION['Checker'];
 $playerField = isset($_SESSION['PlayerField']) ? $_SESSION['PlayerField'] : null;
 if (!$playerField) {
     $playerField = array();
@@ -45,6 +47,7 @@ if (isset($params['action'])) {
 }
 // print_r($_SESSION['PlayerField']);
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -54,12 +57,18 @@ if (isset($params['action'])) {
 
 <body>
     <div class="window">
-        <h1>Расставьте корабли</h1>
+        <?php
+        if ($checker->CheckShipsArrangement($_SESSION['PlayerField'])) { ?>
+            <h1>Расставьте корабли</h1>
+        <?php } else { ?>
+            <h1 style="color: red;">Корабли слишком близко</h1>
+        <?php }
+        ?>
         <div>
-        <a href="?action=setSize&amp;width=8&amp;height=8">8x8</a>
-        <a href="?action=setSize&amp;width=10&amp;height=10">10x10</a>
-        <a href="?action=setSize&amp;width=15&amp;height=15">15x15</a>
-        <a href="?action=setSize&amp;width=20&amp;height=20">20x20</a>
+            <a href="?action=setSize&amp;width=8&amp;height=8">8x8</a>
+            <a href="?action=setSize&amp;width=10&amp;height=10">10x10</a>
+            <a href="?action=setSize&amp;width=15&amp;height=15">15x15</a>
+            <a href="?action=setSize&amp;width=20&amp;height=20">20x20</a>
         </div>
         <div class="field">
             <?php for ($y = 0; $y < count($_SESSION['PlayerField']); $y++) { ?>
@@ -79,7 +88,12 @@ if (isset($params['action'])) {
             <?php } ?>
         </div>
         <div>
-        <a href="./game.php">Начать</a>
+            <?php
+            if ($checker->GetReady()) { ?>
+                <a href="./game.php">Начать</a>
+            <?php } else { ?>
+                <span>Начать</span>
+            <?php } ?>
         </div>
     </div>
 </body>

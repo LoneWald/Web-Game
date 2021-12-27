@@ -44,8 +44,8 @@ td {
 .cell {
     float: left;
     border: 1px solid #ccc;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     position: relative;
     text-align: center;
 }
@@ -76,7 +76,6 @@ td {
 }
 
 /* game.php */
-.PlayField {}
 
         .playerField,
         .enemyField {
@@ -93,8 +92,8 @@ td {
         .enemyFieldCell {
             float: left;
             border: 1px solid #ccc;
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
             position: relative;
             text-align: center;
         }
@@ -147,8 +146,6 @@ td {
         .hitCell {
             background-color: #f00;
         }
-
-        .playerCell {}
 
         .disabled {
             pointer-events: none; /* делаем элемент неактивным для взаимодействия */

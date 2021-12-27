@@ -34,7 +34,8 @@ class SeaBattle
     private $currentPlayer = 1; // 1 или 2, а после окончания игры - null.
     private $winner = null; // после окончания игры будет содержать 1 или 2.
 
-    function __construct($playerField, $fieldWidth, $fieldHeight) {
+    function __construct($playerField, $fieldWidth, $fieldHeight)
+    {
         $this->playerField = $playerField;
         $this->fieldWidth = $fieldWidth;
         $this->fieldHeight = $fieldHeight;
@@ -62,7 +63,7 @@ class SeaBattle
             } else {
                 $this->shotField[$y][$x] = 3;
             }
-            if(!$this->checkWinner()){
+            if (!$this->checkWinner()) {
                 // Ход компьютера
                 $this->playerField = $this->bot->EasyShot($this->playerField);
                 $this->checkWinner();
@@ -86,7 +87,7 @@ class SeaBattle
             $this->winner = 1;
             $this->currentPlayer = null;
             return true;
-        } else if($countEnemy == $this->SHIPS_CELLS_TO_WIN){
+        } else if ($countEnemy == $this->SHIPS_CELLS_TO_WIN) {
             $this->winner = 2;
             $this->currentPlayer = null;
             return true;
@@ -101,10 +102,6 @@ class SeaBattle
     {
         return $this->shotField;
     }
-    // public function getWinnerCells()
-    // {
-    //     return $this->winnerCells;
-    // }
     public function getFieldWidth()
     {
         return $this->fieldWidth;
@@ -124,15 +121,16 @@ class Bot
     private $difficulty;
     private $fieldWidth;
     private $fieldHeight;
-    function __construct($diff, $fieldWidth, $fieldHeight) {
-        switch($diff){
+    function __construct($diff, $fieldWidth, $fieldHeight)
+    {
+        switch ($diff) {
             case "Easy":
                 $this->difficulty = 0;
                 break;
             case "Hard":
                 $this->difficulty = 1;
                 break;
-            default: 
+            default:
                 $this->difficulty = 0;
         }
         $this->fieldWidth = $fieldWidth;
@@ -141,12 +139,13 @@ class Bot
 
     // Выбирает случайное ячейку из тех, что не были под огнем 
     // и возвращает поле с измененной ячейкой
-    public function EasyShot(array $playerField){
+    public function EasyShot(array $playerField)
+    {
         $field = $playerField;
         $array = array();
-        for ($y = 0; $y < $this->fieldHeight; $y++){
-            for ($x = 0; $x < $this->fieldWidth; $x++){
-                if ($field[$y][$x] != 2 && $field[$y][$x] != 3){
+        for ($y = 0; $y < $this->fieldHeight; $y++) {
+            for ($x = 0; $x < $this->fieldWidth; $x++) {
+                if ($field[$y][$x] != 2 && $field[$y][$x] != 3) {
                     array_push($array, array($y, $x));
                 }
             }
@@ -162,10 +161,96 @@ class Bot
         // }
         if ($field[$fieldY][$fieldX] == 0 || $field[$fieldY][$fieldX] == null) {
             $field[$fieldY][$fieldX] = 2;
-        } else
-        {
+        } else {
             $field[$fieldY][$fieldX] = 3;
         }
         return $field;
+    }
+}
+
+class Checker
+{
+    private $isReady = false;
+    private $errors = 0;
+    private $shipsArray = array();
+    private $check = array();
+    private $shipsCount = 0;
+    function CheckShipsArrangement($field)
+    {
+        $this->shipsArray = array();
+        $this->errors = 0;
+        $this->shipsCount = 0;
+        $height = count($field);
+        $width = count($field[0]);
+        // Массив прорверок клеток
+        for ($y = 0; $y < $height; $y++) {
+            $this->check[$y] = array();
+            for ($x = 0; $x < $width; $x++) {
+                array_push($this->check[$y], false);
+            }
+        }
+
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                if ($this->check[$y][$x] == false) {
+                    $this->CheckCell($field, $y, $x);
+                }
+            }
+        }
+        // rsort($this->shipsArray);
+        // print_r($this->shipsArray);
+        if ($this->errors > 0) {
+            $this->isReady = false;
+            return false;
+        } else {
+            if (count($this->shipsArray) > 0)
+                $this->isReady = true;
+            else $this->isReady = false;
+            return true;
+        }
+    }
+
+    private function CheckCell($field, $y, $x)
+    {
+        $this->check[$y][$x] = true;
+        if ($field[$y][$x] == 1) {
+            $this->CheckDiagonal($field, $y, $x);
+            $shipLength = 1;
+            if ($field[$y][$x + 1] == 1 && $field[$y + 1][$x] == 0 && $field[$y - 1][$x] == 0) {
+                $z = $x;
+                while ($field[$y][$z + 1] == 1) {
+                    $this->CheckDiagonal($field, $y, $z + 1);
+                    $this->check[$y][$z + 1] = true;
+                    $z++;
+                    $shipLength++;
+                    if ($field[$y + 1][$z] == 1 || $field[$y - 1][$z] == 1) {
+                        $this->errors++;
+                    }
+                }
+            } else if ($field[$y + 1][$x] == 1 && $field[$y][$x + 1] == 0 && $field[$y][$x - 1] == 0) {
+                $z = $y;
+                while ($field[$z + 1][$x] == 1) {
+                    $this->CheckDiagonal($field, $z + 1, $x);
+                    $this->check[$z + 1][$x] = true;;
+                    $z++;
+                    $shipLength++;
+                    if ($field[$z][$x + 1] == 1 || $field[$z][$x - 1] == 1) {
+                        $this->errors++;
+                    }
+                }
+            } else if ($field[$y][$x + 1] == 1 && $field[$y + 1][$x] == 1)
+                $this->errors++;
+            array_push($this->shipsArray, $shipLength);
+        }
+    }
+
+    private function CheckDiagonal($field, $y, $x)
+    {
+        if($field[$y + 1][$x + 1] == 1 || $field[$y - 1][$x + 1] == 1 || $field[$y - 1][$x - 1] == 1 || $field[$y + 1][$x - 1] == 1)
+            $this->errors++;
+    }
+
+    public function GetReady(){
+        return $this->isReady;
     }
 }
