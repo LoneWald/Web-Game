@@ -19,19 +19,7 @@ class SeaBattle
     );
     private $playerField;
     private $SHIPS_CELLS_TO_WIN = 3;
-
-    /**
-     * @var массив сделанных ходов вида $field[$x][$y] = $player;
-     */
     private $field = array();
-
-    /**
-     * @var $winnerCells аналогичен $field, но хранит только клетки, которые
-     * надо выделить при отображении победившей комбинации.
-     */
-    private $winnerCells = array();
-
-    private $currentPlayer = 1; // 1 или 2, а после окончания игры - null.
     private $winner = null; // после окончания игры будет содержать 1 или 2.
 
     function __construct($playerField, $fieldWidth, $fieldHeight)
@@ -39,25 +27,22 @@ class SeaBattle
         $this->playerField = $playerField;
         $this->fieldWidth = $fieldWidth;
         $this->fieldHeight = $fieldHeight;
-        $this->bot = new Bot("Easy", $this->fieldWidth, $this->fieldHeight);
+        $this->SetShipsToWin();
+        $this->bot = new Bot("Easy", $this->fieldWidth, $this->fieldHeight, $playerField);
+        $this->bot->CreatePlayField();
+        $this->enemyField = $this->bot->GetPlayebleField();
+        //print_r($this->bot->GetPlayebleField());
     }
 
     public function makeShot($y, $x)
     {
-        // Учитываем ход, если выполняются все условия:
-        // 1) игра ещё идет,
-        // 2) клетка находится в пределах игрового поля.
-        // 3) в поле на указанном месте ещё пусто,
         if (
-            $this->currentPlayer
-            &&
             $x >= 0 && $x < $this->fieldWidth
             &&
             $y >= 0 && $y < $this->fieldHeight
             &&
             empty($this->shotField[$y][$x])
         ) {
-            $current = $this->currentPlayer;
             if ($this->enemyField[$y][$x] == 0) {
                 $this->shotField[$y][$x] = 2;
             } else {
@@ -114,15 +99,35 @@ class SeaBattle
     {
         return $this->playerField;
     }
+
+    private function SetShipsToWin(){
+        $this->SHIPS_CELLS_TO_WIN = 0;
+        for ($y = 0; $y < $this->fieldHeight; $y++) {
+            for ($x = 0; $x < $this->fieldWidth; $x++) {
+                if($this->playerField[$y][$x] == true || $this->playerField[$y][$x] == 1){
+                    $this->SHIPS_CELLS_TO_WIN++;
+                }
+            }
+        }
+    }
 }
 
 class Bot
 {
+    private $playerField;
+    private $playebleField;
+    private $checker;
+    private $shipsArray;
     private $difficulty;
     private $fieldWidth;
     private $fieldHeight;
-    function __construct($diff, $fieldWidth, $fieldHeight)
+    private $fieldMask;
+    function __construct($diff, $fieldWidth, $fieldHeight, $playerField)
     {
+        $this->playerField = $playerField;
+        $this->checker = new Checker();
+        $this->shipsArray = $this->checker->CheckShipsArrangement($this->playerField);
+        $this->shipsArray = $this->checker->getShipsArray();
         switch ($diff) {
             case "Easy":
                 $this->difficulty = 0;
@@ -166,6 +171,110 @@ class Bot
         }
         return $field;
     }
+
+    public function CreatePlayField(){
+        $this->playebleField = array();
+        for ($y = 0; $y < $this->fieldHeight; $y++) {
+            $this->playebleField[$y] = array();
+            for ($x = 0; $x < $this->fieldWidth; $x++) {
+                $this->playebleField[$y][$x] = false;
+            }
+        }
+        $this->fieldMask = $this->playebleField;
+        $this->InsertShip(0, $this->fieldMask);
+        // if($this->InsertShip(0, $this->fieldMask)){
+        //     return $this->playebleField;
+        // }
+        // else
+        //     return array();
+
+    }
+
+    private function UpdateMask($field, $startY, $startX, $endY, $endX){
+        $currentField = $field;
+        for ($y = $startY; $y <= $endY; $y++) {
+            for ($x = $startX; $x <= $endX; $x++) {
+                $currentField[$y][$x] = true;
+            }
+        }
+        return $currentField;
+    }
+
+    private function FreeMaskToArray($mask){
+        $array = array();
+        for ($y = 0; $y < $this->fieldHeight; $y++) {
+            for ($x = 0; $x < $this->fieldWidth; $x++) {
+                if($mask[$y][$x] == false){
+                    array_push($array, array($y, $x));
+                }
+            }
+        }
+        return $array;
+    }
+
+    private function InsertShip($shipNumber, $parentMask)
+    {
+        $ship = $shipNumber;
+        $shipLenght = $this->shipsArray[$ship];
+        $countOfCorrectPositions = 0;
+        $secondMask = array();
+        // Заполняет secondMask массивом точек, которые могут стать стартовыми для текущего корабля
+        for ($y = 0; $y < $this->fieldHeight; $y++) {
+            $secondMask[$y] = array();
+            for ($x = 0; $x < $this->fieldWidth; $x++) {
+                if (
+                    $parentMask[$y][$x] == false
+                    && ($this->checker->CheckFreeLine($parentMask, $y, $x, $y + $shipLenght, $x)
+                        || $this->checker->CheckFreeLine($parentMask, $y, $x, $y, $x + $shipLenght))
+                ) {
+                    $secondMask[$y][$x] = false;
+                } else {
+                    $secondMask[$y][$x] = true;
+                }
+                echo $secondMask[$y][$x] ? 'true' : 'false';
+            }
+            ?>
+            <br><?php
+        }
+        // Рекурсивный цикл запонения кораблей
+        do {
+            $countOfCorrectPositions = count($this->FreeMaskToArray($secondMask));
+            if ($countOfCorrectPositions > 0) {
+                $buf = $this->FreeMaskToArray($secondMask);
+                $randPos = rand(0, count($buf) - 1);
+                $startY = $buf[$randPos][0];
+                $startX = $buf[$randPos][1];
+                // Вставляет в горизонтальном направлении и меняет маску
+                if ($this->checker->CheckFreeLine($secondMask, $startY, $startX, $startY, $startX + $shipLenght)) {
+                    for ($y = $startY; $y <= $startY + $shipLenght; $y++) {
+                        for ($x = $startX; $x <= $startX; $x++) {
+                            $this->playebleField[$y][$x] = 1;
+                            $secondMask = $this->UpdateMask($secondMask, $y-1, $x-1, $y+1, $x+1);
+                        }
+                    }
+                }
+                else if ($this->checker->CheckFreeLine($secondMask, $startY, $startX, $startY + $shipLenght, $startX)) {
+                    for ($y = $startY; $y <= $startY; $y++) {
+                        for ($x = $startX; $x <= $startX + $shipLenght; $x++) {
+                            $this->playebleField[$y][$x] = 1;
+                            $secondMask = $this->UpdateMask($secondMask, $y-1, $x-1, $y+1, $x+1);
+                        }
+                    }
+                }
+                $boo = $this->InsertShip($ship+1, $secondMask);
+                if($boo == true){
+                    return true;
+                }
+            }
+            else {
+                return false;
+            }
+        } while ($countOfCorrectPositions > 0);
+    }
+
+    public function GetPlayebleField(){
+        return $this->playebleField;
+    }
 }
 
 class Checker
@@ -175,6 +284,7 @@ class Checker
     private $shipsArray = array();
     private $check = array();
     private $shipsCount = 0;
+
     function CheckShipsArrangement($field)
     {
         $this->shipsArray = array();
@@ -246,11 +356,32 @@ class Checker
 
     private function CheckDiagonal($field, $y, $x)
     {
-        if($field[$y + 1][$x + 1] == 1 || $field[$y - 1][$x + 1] == 1 || $field[$y - 1][$x - 1] == 1 || $field[$y + 1][$x - 1] == 1)
+        if ($field[$y + 1][$x + 1] == 1 || $field[$y - 1][$x + 1] == 1 || $field[$y - 1][$x - 1] == 1 || $field[$y + 1][$x - 1] == 1)
             $this->errors++;
     }
+    // Проверяет нет ли припятствий на линии
+    public function CheckFreeLine($field, $startY, $startX, $endY, $endX)
+    {
+        $count = 0;
+        for ($y = $startY; $y < $endY; $y++) {
+            for ($x = $startX; $x < $endX; $x++) {
+                if ($field[$y][$x] == true) {
+                    $count++;
+                }
+            }
+        }
+        if ($count = 0)
+            return true;
+        else
+            return false;
+    }
 
-    public function GetReady(){
+    public function GetReady()
+    {
         return $this->isReady;
+    }
+
+    public function GetShipsArray(){
+        return $this->shipsArray;
     }
 }

@@ -11,7 +11,7 @@ if ($email != null) {
 
         $arr = $pdo->prepare('SELECT * FROM account WHERE email = ? OR login = ?');     // Поиск аккаунта с такой почтой
         $arr->execute(array($email, $login));
-        echo $arr->rowCount();
+        //echo $arr->rowCount();
 
         if ($arr->rowCount() == 0) {                                                    // Если таких нет
             $sql = $pdo->prepare('INSERT INTO account (`id`, `login`, `password`, `email`, `nickname`) VALUES (NULL, ?, ?, ?, ?)');

@@ -45,6 +45,8 @@ if (isset($params['action'])) {
         $_SESSION['PlayerField'] = $playerField;
     }
 }
+
+$shipsArray = $checker->GetShipsArray();
 // print_r($_SESSION['PlayerField']);
 ?>
 
