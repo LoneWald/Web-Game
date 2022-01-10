@@ -45,7 +45,6 @@ if (isset($params['action'])) {
         $_SESSION['PlayerField'] = $playerField;
     }
 }
-
 $shipsArray = $checker->GetShipsArray();
 // print_r($_SESSION['PlayerField']);
 ?>
@@ -58,6 +57,9 @@ $shipsArray = $checker->GetShipsArray();
 </head>
 
 <body>
+<?php
+    include("header.php");
+    ?>
     <div class="window">
         <?php
         if ($checker->CheckShipsArrangement($_SESSION['PlayerField'])) { ?>

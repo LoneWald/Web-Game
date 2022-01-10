@@ -473,4 +473,8 @@ class Checker
     public function GetShipsArray(){
         return $this->shipsArray;
     }
+
+    public function Print1(){
+        print_r("Hui");
+    }
 }

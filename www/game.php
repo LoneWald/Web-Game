@@ -2,6 +2,16 @@
 require_once("checkAuthorize.php");
 require_once("classes.php");
 session_start();
+$playerFieldPlayeble = false;
+for ($y = 0; $y < $_SESSION['FieldHeight']; $y++) {
+    for ($x = 0; $x < $_SESSION['FieldWidth']; $x++) {
+        if($_SESSION['PlayerField'][$y][$x] == true)
+            $playerFieldPlayeble = true;
+    }
+}
+if(!$playerFieldPlayeble || $_SESSION['PlayerField'] == null){
+    header("Location: prepareToBattle.php");
+}
 // Получаем из сессии текущую игру.
 // Если игры еще нет, создаём новую.
 $game = isset($_SESSION['game']) ? $_SESSION['game'] : null;
@@ -41,6 +51,9 @@ $winner = $game->getWinner();
 </head>
 
 <body>
+    <?php
+    include("header.php");
+    ?>
     <div class="window">
     <?php if ($winner) {
         $disabled = " disabled";

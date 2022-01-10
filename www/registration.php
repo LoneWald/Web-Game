@@ -4,7 +4,6 @@ $login = $_POST['login'];
 $password1 = $_POST['password1'];
 $password2 = $_POST['password2'];
 $nickname = $_POST['nickname'];
-
 if ($email != null) {
     if (($password1 == $password2) && ($password1 != null)) {
         include_once "db_connect.php";
