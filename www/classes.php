@@ -226,82 +226,90 @@ class Bot
         return $array;
     }
 
-    private function InsertShips($shipNumber)
+    private function InsertShips($shipNumber, $field)
     {
+        $firstMask = $field;
         $ship = $shipNumber;
         $shipLenght = $this->shipsArray[$ship];
         $countOfCorrectPositions = 0;
         $secondMask = array();
         // Заполняет secondMask массивом точек, которые могут стать стартовыми для текущего корабля
+        print_r("Высота ".$this->fieldHeight."\n");
+        print_r("Ширина ".$this->fieldWidth."\n");
+        print_r("Field Start \n");
         for ($y = 0; $y < $this->fieldHeight; $y++) {
             $secondMask[$y] = array();
             for ($x = 0; $x < $this->fieldWidth; $x++) {
                 if (
                     $this->fieldMask[$y][$x] == false
-                    && (($this->checker->CheckFreeLine($this->fieldMask, $y, $x, $y + $shipLenght, $x) && $y + $shipLenght <= $this->fieldHeight) 
-                        || ($this->checker->CheckFreeLine($this->fieldMask, $y, $x, $y, $x + $shipLenght) && $x + $shipLenght <= $this->fieldWidth))
+                    && (($this->checker->CheckFreeLine($this->fieldMask, $y, $x, $y + ($shipLenght-1), $x) && $y + $shipLenght <= $this->fieldHeight) 
+                        || ($this->checker->CheckFreeLine($this->fieldMask, $y, $x, $y, $x + ($shipLenght-1)) && $x + $shipLenght <= $this->fieldWidth))
                 ) {
+                    print_r("   true\n");
                     $secondMask[$y][$x] = false;
                 } else {
+                    print_r("   false\n");
                     $secondMask[$y][$x] = true;
                 }
             }
         }
+        print_r("Field End \n");
+        $this->checker->PrintTest($secondMask);
         // Рекурсивный цикл запонения кораблей
         //print_r($this->FreeMaskToArray($secondMask));
         $result = false;
         //print_r($this->shipsArray);
         do {
             $countOfCorrectPositions = count($this->FreeMaskToArray($secondMask));
-            print_r($countOfCorrectPositions);
-            print(" ");
+            print_r("\nВозможных позиций - ".$countOfCorrectPositions."\n");
             //print_r($this->FreeMaskToArray($secondMask));
             if ($countOfCorrectPositions > 0) {
                 $buf = $this->FreeMaskToArray($secondMask);
                 $randPos = rand(0, count($buf) - 1);
                 $startY = $buf[$randPos][0];
                 $startX = $buf[$randPos][1];
-                print_r($randPos);
-                print(" ");
-                print_r($startY);
-                print_r($startX);
-                print(" ");
+                print_r("Выбранная позиция: ".$randPos."\n");
+                print_r("Координаты точки (".$startY.";".$startX.")\n");
                 // Вставляет в горизонтальном направлении и меняет маску
                 $choice = 0;
                 // Выбор вертикально или горизонтально. Если не влезает то в маске закрыть эту позицию
                 if (
-                    $this->checker->CheckFreeLine($secondMask, $startY, $startX, $startY, $startX + $shipLenght) && $startX + $shipLenght <= $this->fieldWidth
-                    && $this->checker->CheckFreeLine($secondMask, $startY, $startX, $startY + $shipLenght, $startX) && $startY + $shipLenght <= $this->fieldHeight
+                    $this->checker->CheckFreeLine($firstMask, $startY, $startX, $startY, $startX + ($shipLenght-1)) && $startX + ($shipLenght) <= $this->fieldWidth
+                    && $this->checker->CheckFreeLine($firstMask, $startY, $startX, $startY + ($shipLenght-1), $startX) && $startY + ($shipLenght) <= $this->fieldHeight
                 ) {
                     $choice = 3;
-                } else if ($this->checker->CheckFreeLine($secondMask, $startY, $startX, $startY, $startX + $shipLenght) && $startX + $shipLenght <= $this->fieldWidth) {
+                } else if ($this->checker->CheckFreeLine($firstMask, $startY, $startX, $startY, $startX + ($shipLenght-1)) && $startX + ($shipLenght) <= $this->fieldWidth) {
                     $choice = 2;
-                } else if ($this->checker->CheckFreeLine($secondMask, $startY, $startX, $startY + $shipLenght, $startX) && $startY + $shipLenght <= $this->fieldHeight) {
+                } else if ($this->checker->CheckFreeLine($firstMask, $startY, $startX, $startY + ($shipLenght-1), $startX) && $startY + ($shipLenght) <= $this->fieldHeight) {
                     $choice = 1;
                 }
-                print_r($choice);
-                print("\n");
+                print_r("\nВыбор расстановки - ".$choice."\n");
             switch ($choice) {
                 case 3:
                     $rand = rand(0, 1);
-                    if ($rand == 1)
-                        $this->AddOneShip($startY, $startX, $startY, $startX + $shipLenght);
-                    else
-                        $this->AddOneShip($startY, $startX, $startY + $shipLenght, $startX);
+                    if ($rand == 1){
+                        $choice = 1;
+                        $this->AddOneShip($startY, $startX, $startY, $startX + ($shipLenght-1));
+                    }
+                    else{
+                        $choice = 2;
+                        $this->AddOneShip($startY, $startX, $startY + ($shipLenght-1), $startX);
+                    }
                     break;
                 case 2:
-                    $this->AddOneShip($startY, $startX, $startY, $startX + $shipLenght);
+                    $this->AddOneShip($startY, $startX, $startY, $startX + ($shipLenght-1));
                     break;
                 case 1:
-                    $this->AddOneShip($startY, $startX, $startY + $shipLenght, $startX);
+                    $this->AddOneShip($startY, $startX, $startY + ($shipLenght-1), $startX);
                     break;
                 case 0:
                     $secondMask[$startY][$startX] = true;
                     break;
             }
+            //print_r($secondMask);
             if ($choice > 0) {
                 if ($ship < count($this->shipsArray) - 1) {
-                    $boo = $this->InsertShips($ship + 1, $secondMask);
+                    $boo = $this->InsertShips($ship + 1, $firstMask);
                     if ($boo == true) {
                         $result = true;
                         break;
@@ -345,6 +353,22 @@ class Bot
         }
         return true;
     }
+
+    private function UpdateFieldMask(){
+        for ($y = 0; $y < $this->fieldWidth; $y++) {
+            for ($x = 0; $x < $this->fieldWidth; $x++) {
+                if($this->playebleField[$y][$x] == true){
+                    for ($y1 = $y-1; $y1 < $y+1; $y1++) {
+                        for ($x1 = $x-1; $x1 <= $y+1; $x1++) {
+                            $this->fieldMask = true;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+        
 
     public function GetPlayebleField(){
         return $this->playebleField;
@@ -441,21 +465,22 @@ class Checker
         $count = 0;
         for ($y = $startY; $y <= $endY; $y++) {
             for ($x = $startX; $x <= $endX; $x++) {
+                print_r("\n(".$y.";".$x.") => ".($field[$y][$x]? "1" : "0"));
                 if ($field[$y][$x] == true) {
                     $count++;
                 }
+
             }
         }
-        if ($count == 0)
-            return true;
-        else
-            return false;
+        print_r("\nОриентация: = ".($startX==$endX? "Y" : "X")."");
+        return $count == 0;
     }
 
     public function PrintTest($field){
-        for ($y = 0; $y <= count($field); $y++) {
+        print("\n--------------");
+        for ($y = 0; $y < count($field); $y++) {
             print("\n");
-            for ($x = 0; $x <= count($field[$y]); $x++) {
+            for ($x = 0; $x < count($field[$y]); $x++) {
                 if($field[$y][$x] == false)
                 print_r("0");
                 else 
@@ -463,6 +488,7 @@ class Checker
                 print(" ");
             }
         }
+        print("\n--------------");
     }
 
     public function GetReady()

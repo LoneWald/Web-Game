@@ -54,49 +54,53 @@ $shipsArray = $checker->GetShipsArray();
 
 <head>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<?php
+    <?php
     include("header.php");
     ?>
     <div class="window">
-        <?php
+        <div class="action-info">
+            <?php
         if ($checker->CheckShipsArrangement($_SESSION['PlayerField'])) { ?>
             <h1>Расставьте корабли</h1>
-        <?php } else { ?>
+            <?php } else { ?>
             <h1 style="color: red;">Корабли слишком близко</h1>
-        <?php }
+            <?php }
         ?>
-        <div>
-            <a href="?action=setSize&amp;width=8&amp;height=8">8x8</a>
+        </div>
+        <div class="select-size">
+            <a href="?action=setSize&amp;width=3&amp;height=3">3x3</a>
+            <a href="?action=setSize&amp;width=5&amp;height=5">5x5</a>
             <a href="?action=setSize&amp;width=10&amp;height=10">10x10</a>
             <a href="?action=setSize&amp;width=15&amp;height=15">15x15</a>
             <a href="?action=setSize&amp;width=20&amp;height=20">20x20</a>
         </div>
         <div class="field">
             <?php for ($y = 0; $y < count($_SESSION['PlayerField']); $y++) { ?>
-                <div class="row">
-                    <?php for ($x = 0; $x < count($_SESSION['PlayerField'][0]); $x++) {
+            <div class="row">
+                <?php for ($x = 0; $x < count($_SESSION['PlayerField'][0]); $x++) {
                         if ($_SESSION['PlayerField'][$y][$x] == 1)
                             $selected = true;
                         else
                             $selected = false;
                         $class = ($selected ? ' selected' : ' unSelected');
                     ?>
-                        <div class="cell<?php echo $class ?>">
-                            <a href="?action=change&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
-                        </div>
-                    <?php } ?>
+                <div class="cell<?php echo $class ?>">
+                    <a href="?action=change&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
                 </div>
+                <?php } ?>
+            </div>
             <?php } ?>
         </div>
         <div>
             <?php
             if ($checker->GetReady()) { ?>
-                <a href="./game.php">Начать</a>
+            <a class="start-button" href="./game.php">Начать</a>
             <?php } else { ?>
-                <span>Начать</span>
+            <span class="start-button-disabled">Начать</span>
             <?php } ?>
         </div>
     </div>

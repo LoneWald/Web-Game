@@ -34,6 +34,9 @@ if ($email != null) {
 </head>
 
 <body>
+<?php
+    include("header.php");
+    ?>
     <div class="center">
         <h1 style="color:black">Регистрация</h1>
         <form method="POST" action="registration.php">

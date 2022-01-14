@@ -1,226 +1,336 @@
-*{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-decoration: none;
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
 }
 
-/* ---------------- Header ---------------------*/
-.header{
-    width: 100%;
-    height: 80px;
-    display: block;
-    background-color: #101010;
+body {
+  background-color: #1e1e1e;
+  font-family: "Bradley Hand", cursive;
 }
 
-.inner-header{
-    width: 90%;
-    height: 100%;
-    display: block;
-    margin: 0 auto;
+h1,
+h2,
+h3 {
+  color: #68cefe;
 }
 
-.logo-container{
-    height: 100%;
-    display: table;
-    float: left;
+/* --- Header ---*/
+.header {
+  width: 100%;
+  height: 80px;
+  display: block;
+  background-color: #2d2d2d;
 }
 
-.logo-container h1{
-    color: white;
-    height: 100%;
-    display: table-cell;
-    vertical-align: middle;
-    font-size: 32px;
-    font-weight: 200;
-    padding: 0 20px;
+.inner-header {
+  width: 90%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
-.logo-container h1 span{
-    font-weight: 800;
+.logo-container {
+  height: 100%;
+  display: table;
+  float: left;
 }
 
-.navigation{
-    float: right;
-    height: 100%;
+.logo-container a {
+  color: white;
+  height: 100%;
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 20px;
+  font-weight: 200;
+  padding: 0 20px;
+  color: #a37c82;
 }
 
-.navigation a{
-    height: 100%;
-    display: table;
-    float: left;
-    padding: 0 20px;
+.logo-container a h1 span {
+  font-weight: 800;
+  color: #d79a4b;
 }
 
-.navigation a li{
-    display: table-cell;
-    vertical-align: middle;
-    height: 100%;
-    color: white;
-    font-size: 16px;
+.navigation {
+  float: right;
+  height: 100%;
 }
 
-
-/* ------------------- End Header -------------------*/
-
-
-
-
-
-
-
-
-.center{
-    text-align: center;
+.navigation li {
+  height: 100%;
+  display: table;
+  float: left;
+  padding: 0 20px;
 }
 
-.pl{
-    margin: 3px;
+.navigation li > div {
+  display: table-cell;
+  vertical-align: middle;
 }
 
-/* body{
-    background-image: url(img/Anime_bg.jpg);
-    background-size: cover;
-} */
-
-#error_message{
-    color:red; 
-    text-align:center;
+.navigation li div a {
+  height: 100%;
+  color: #d79a4b;
+  font-size: 20px;
 }
 
-#success_message{
-    color:green; 
-    text-align:center;
+.navigation li:hover {
+  transform: scale(1.2);
+}
+
+.dropdown {
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #2d2d2d;
+  z-index: 1;
+  width: 160px;
+  top: 73px;
+  left: -20px;
+  text-align: center;
+  border-radius: 0 0 15px 15px;
+}
+
+.dropdown-content div {
+  padding: 5px 10px;
+}
+
+.dropdown-content a {
+  color: black;
+  text-decoration: none;
+}
+
+.dropdown-content div:hover {
+  background-color: #272727;
+  border-radius: 15px 15px 15px 15px;
+}
+.dropdown:hover .dropdown-content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+/* --- End Header ---*/
+
+/*--- UI ---*/
+.action-info {
+  margin: 30px;
+  font-size: 20px;
+}
+
+.action-info h1 {
+  color: #d79a4b;
+}
+
+.start-button-disabled,
+.restart-button,
+.start-button {
+  font-size: 30px;
+  font-weight: 800;
+  padding: 5px 20px;
+  border-radius: 10px;
+  border: 2px solid #68cefe;
+  background-color: #2d2d2d;
+}
+
+.restart-button,
+.start-button {
+  color: #68cefe;
+}
+
+.start-button-disabled {
+  color: #555;
+  cursor: default;
+  border: 2px solid #37708a;
+}
+
+.select-size {
+}
+
+.select-size a {
+  margin: 10px;
+  font-size: 30px;
+  font-weight: 500;
+  color: #68cefe;
+  padding: 2px 15px;
+  border: 2px solid #68cefe;
+  background-color: #2d2d2d;
+  border-radius: 10px;
+}
+/*--- End UI ---*/
+
+/* --- Message ---*/
+.center {
+  text-align: center;
+}
+
+.pl {
+  margin: 3px;
+}
+
+#error_message {
+  color: red;
+  text-align: center;
+}
+
+#success_message {
+  color: green;
+  text-align: center;
 }
 
 td {
-    width: 20px;
-    height: 20px;
-  }
+  width: 20px;
+  height: 20px;
+}
+/* --- End Message ---*/
 
-/* prepareToBattle.php */
-
+/*--- prepareToBattle.php ---*/
 .window {
-    text-align: center;
+  text-align: center;
+  padding-top: 1%;
 }
 .field {
-    overflow: hidden;
-    display: inline-block;
-    margin: 10px 30px 10px 30px;
+  overflow: hidden;
+  display: inline-block;
+  margin: 10px 30px 10px 30px;
+  padding: 20px;
 }
 
 .row {
-    clear: both;
+  clear: both;
 }
 
 .cell {
-    float: left;
-    border: 1px solid #ccc;
-    width: 30px;
-    height: 30px;
-    position: relative;
-    text-align: center;
+  float: left;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0 solid;
+  position: relative;
+  text-align: center;
 }
 
 .cell p {
-    position: relative;
-    text-align: center;
+  position: relative;
+  text-align: center;
 }
 
 .cell a {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0
-}
-
-.cell a:hover {
-    background: #ccc;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .selected {
-    background-color: #8c4;
+  background-color: #68ef00;
+  border-radius: 0px;
+}
+
+.selected:hover {
+  background-color: #af3;
+  transform: scale(1.2);
+  z-index: 5;
 }
 
 .unSelected {
-    background-color: #55f;
+  background-color: #55f;
+  border-radius: 9px;
 }
 
-/* game.php */
+.unSelected:hover {
+  background-color: #22f;
+  transform: scale(1.2);
+  z-index: 5;
+}
+/*---End prepareToBattle.php ---*/
 
-        .playerField,
-        .enemyField {
-            overflow: hidden;
-            display: inline-block;
-            margin: 10px 30px 10px 30px;
-        }
+/*--- game.php ---*/
+.playerField,
+.enemyField {
+  overflow: hidden;
+  display: inline-block;
+  margin: 10px 30px 10px 30px;
+  padding: 20px;
+}
 
-        .row {
-            clear: both;
-        }
+.row {
+  clear: both;
+}
 
-        .playerFieldCell,
-        .enemyFieldCell {
-            float: left;
-            border: 1px solid #ccc;
-            width: 30px;
-            height: 30px;
-            position: relative;
-            text-align: center;
-        }
+.playerFieldCell,
+.enemyFieldCell {
+  float: left;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  text-align: center;
+  border-radius: 10px;
+  border: 0px solid;
+  padding: 1;
+}
 
-        .playerFieldCell p {
-            position: relative;
-            text-align: center;
-        }
+.playerFieldCell {
+  pointer-events: none; /* делаем элемент неактивным для взаимодействия */
+}
 
-        .enemyFieldCell a {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0
-        }
+.playerFieldCell p {
+  position: relative;
+  text-align: center;
+}
 
-        .enemyFieldCell a:hover {
-            background: #ccc;
-        }
+.enemyFieldCell a {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
 
-        .enemyFieldCell.winner {
-            background: #f00;
-        }
+.enemyFieldCell.winner {
+  background: #f00;
+}
 
-        .icon {
-            display: inline-block;
-        }
+.icon {
+  display: inline-block;
+}
 
-        .player1:after {
-            content: 'X';
-        }
+.emptyCell {
+  background-color: #55f;
+}
 
-        .player2:after {
-            content: 'O';
-        }
+.emptyCell:hover {
+  background-color: #22f;
+  transform: scale(1.2);
+  z-index: 5;
+}
 
-        .emptyCell {
-            background-color: #55f;
-        }
+.missCell {
+  background-color: #fff;
+}
 
-        .missCell {
-            background-color: #aaa;
-        }
+.missCell:hover {
+  background-color: #fff;
+  transform: scale(1) !important;
+}
 
-        .undetectedCell {
-            background-color: #8c4;
-        }
+.undetectedCell {
+  background-color: #8c4;
+  border-radius: 5px !important;
+}
 
-        .hitCell {
-            background-color: #f00;
-        }
+.hitCell {
+  background-color: #f00;
+  border-radius: 5px !important;
+}
 
-        .disabled {
-            pointer-events: none; /* делаем элемент неактивным для взаимодействия */
-            cursor: default; /*  курсор в виде стрелки */
-            color: #888;/* цвет текста серый */
-            }
+.disabled {
+  pointer-events: none; /* делаем элемент неактивным для взаимодействия */
+  cursor: default; /*  курсор в виде стрелки */
+  color: #888; /* цвет текста серый */
+}
+/*--- End game.php ---*/

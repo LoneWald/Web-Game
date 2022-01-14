@@ -40,6 +40,9 @@ function check($login, $password)
 </head>
 
 <body>
+<?php
+    include("header.php");
+    ?>
     <div class="center">
         <h1 style="color:black">Вход</h1>
         <form method="POST" action="login.php">

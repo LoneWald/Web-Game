@@ -55,23 +55,25 @@ $winner = $game->getWinner();
     include("header.php");
     ?>
     <div class="window">
-    <?php if ($winner) {
+        <div class="action-info">
+            <?php if ($winner) {
         $disabled = " disabled";
         if ($winner == 1) { ?>
             <!-- Отображаем сообщение о победителе -->
             <h1 style="color: green;">Победил Игрок!</h1>
-        <?php } else { ?>
+            <?php } else { ?>
             <h1 style="color: red;">Победил Компьютер!</h1>
-        <?php } ?>
-    <?php } else { ?>
-        <h1>Атакуйте!</h1>
-        <?php } ?>
+            <?php } ?>
+            <?php } else { ?>
+            <h1>Атакуйте!</h1>
+            <?php } ?>
+        </div>
         <!-- Player Field -->
         <div class="PlayField">
             <div class="playerField">
                 <?php for ($y = 0; $y < $height; $y++) { ?>
-                    <div class="row">
-                        <?php for ($x = 0; $x < $width; $x++) {
+                <div class="row">
+                    <?php for ($x = 0; $x < $width; $x++) {
                             $playerCell = $playerField[$y][$x];
                             switch ($playerCell) {
                                 case 3:
@@ -88,19 +90,19 @@ $winner = $game->getWinner();
                                     break;
                             }
                         ?>
-                            <div class="playerFieldCell<?php echo $class ?>">
-                                <div><?php //echo $playerCell 
+                    <div class="playerFieldCell<?php echo $class ?>">
+                        <div><?php //echo $playerCell 
                                         ?></div>
-                            </div>
-                        <?php } ?>
                     </div>
+                    <?php } ?>
+                </div>
                 <?php } ?>
             </div>
             <!-- Enemy Field -->
             <div class="enemyField">
                 <?php for ($y = 0; $y < $height; $y++) { ?>
-                    <div class="row">
-                        <?php for ($x = 0; $x < $width; $x++) {
+                <div class="row">
+                    <?php for ($x = 0; $x < $width; $x++) {
 
                             $shottedField = isset($field[$y][$x]) ? $field[$y][$x] : null;
                             if ($shottedField === null)
@@ -110,18 +112,18 @@ $winner = $game->getWinner();
                             } else
                                 $class = ' hitCell';
                         ?>
-                            <div class="enemyFieldCell<?php echo $class ?>">
-                                <?php if ($shottedField === null) { ?>
-                                    <a class="<?php echo $disabled ?>" href="?action=move&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
-                                <?php } ?>
-                            </div>
+                    <div class="enemyFieldCell<?php echo $class." ".$disabled ?>">
+                        <?php if ($shottedField === null) { ?>
+                        <a href="?action=move&amp;x=<?php echo $x ?>&amp;y=<?php echo $y ?>"></a>
                         <?php } ?>
                     </div>
+                    <?php } ?>
+                </div>
                 <?php } ?>
             </div>
         </div>
         <div>
-            <br /><a href="./restart.php">Начать новую игру</a>
+            <br /><a class="start-button" href="./restart.php">Начать новую игру</a>
         </div>
     </div>
 </body>
