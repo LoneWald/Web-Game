@@ -16,7 +16,7 @@ session_start();
     include("header.php");
     ?>
     <div class="center">
-        <img src="img/ships.png">
+        <img style="height: 80vh;" src="img/ships.png">
     </div>
 </body>
 

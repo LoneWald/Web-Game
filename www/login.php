@@ -44,7 +44,7 @@ function check($login, $password)
     include("header.php");
     ?>
     <div class="center">
-        <h1 style="color:black">Вход</h1>
+        <h1>Вход</h1>
         <form method="POST" action="login.php">
             <input class="pl" type="text" name="login" placeholder="Логин" required /> <br>
             <input class="pl" type="text" name="password" placeholder="Пароль" required /> <br>

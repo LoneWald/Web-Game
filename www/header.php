@@ -57,7 +57,7 @@
                 ?>
             <li>
                 <div>
-                    <a href="login.php">Войти</a>
+                    <a href="login.php">Войти</a><a>/</a><a href="registration.php">Регистрация</a>
                 </div>
             </li>
             <?php
