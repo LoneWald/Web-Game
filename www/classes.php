@@ -22,11 +22,12 @@ class SeaBattle
     private $field = array();
     private $winner = null; // после окончания игры будет содержать 1 или 2.
 
-    function __construct($playerField, $fieldWidth, $fieldHeight)
+    function __construct($playerField, $fieldWidth, $fieldHeight, $difficult)
     {
         $this->playerField = $playerField;
         $this->fieldWidth = $fieldWidth;
         $this->fieldHeight = $fieldHeight;
+        $this->difficult = $difficult;
         $this->SetShipsToWin();
         $this->bot = new Bot("Easy", $this->fieldWidth, $this->fieldHeight, $playerField);
         $this->bot->CreatePlayField();
@@ -70,15 +71,14 @@ class SeaBattle
         }
         if ($countPlayer == $this->SHIPS_CELLS_TO_WIN) {
             $this->winner = 1;
-            $this->currentPlayer = null;
             return true;
         } else if ($countEnemy == $this->SHIPS_CELLS_TO_WIN) {
             $this->winner = 2;
-            $this->currentPlayer = null;
             return true;
         } else
             return false;
     }
+
     public function getWinner()
     {
         return $this->winner;
@@ -98,6 +98,9 @@ class SeaBattle
     public function getPlayerField()
     {
         return $this->playerField;
+    }
+    public function GetDifficult(){
+        return $this->difficult;
     }
 
     private function SetShipsToWin(){

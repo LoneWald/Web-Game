@@ -34,7 +34,7 @@
             ?>
             <li>
                 <div>
-                    <a>Списки лидеров</a>
+                    <a href="leaderboards.php">Списки лидеров</a>
                 </div>
             </li>
             <?php 

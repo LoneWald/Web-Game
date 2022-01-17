@@ -6,22 +6,40 @@
 }
 
 body {
-  background-color: #1e1e1e;
-  font-family: "Bradley Hand", cursive;
+  font-family: "Bradley Hand", cursive !important;
+  background-color: var(--s-gray-1) !important;
+}
+
+.content {
 }
 
 h1,
 h2,
 h3 {
-  color: #68cefe;
+  color: var(--s-blue1);
 }
 
+input::placeholder {
+  color: var(--s-orange);
+}
+
+:root {
+  --s-transparent: rgba(0, 0, 0, 0);
+  --s-blue1: #68cefe;
+  --s-blue2: #569cd6;
+  --s-blue3: #3184c8;
+  --s-orange: #d79a4b;
+  --s-gray-1: #1e1e1e;
+  --s-gray-2: #2d2d2d;
+  --s-green1: #6a9955;
+  --s-green2: #84b071;
+}
 /* --- Header ---*/
 .header {
   width: 100%;
   height: 80px;
   display: block;
-  background-color: #2d2d2d;
+  background-color: var(--s-gray-2);
 }
 
 .inner-header {
@@ -46,11 +64,12 @@ h3 {
   font-weight: 200;
   padding: 0 20px;
   color: #a37c82;
+  text-decoration: none;
 }
 
 .logo-container a h1 span {
   font-weight: 800;
-  color: #d79a4b;
+  color: var(--s-orange);
 }
 
 .navigation {
@@ -72,8 +91,9 @@ h3 {
 
 .navigation li div a {
   height: 100%;
-  color: #d79a4b;
+  color: var(--s-orange);
   font-size: 20px;
+  text-decoration: none;
 }
 
 .navigation li:hover {
@@ -86,7 +106,7 @@ h3 {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #2d2d2d;
+  background-color: var(--s-gray-2);
   z-index: 1;
   width: 160px;
   top: 73px;
@@ -122,26 +142,27 @@ h3 {
 }
 
 .action-info h1 {
-  color: #d79a4b;
+  color: var(--s-orange);
 }
 
-.start-button-disabled,
+.button-disabled,
 .restart-button,
 .start-button {
   font-size: 30px;
   font-weight: 800;
   padding: 5px 20px;
   border-radius: 10px;
-  border: 2px solid #68cefe;
-  background-color: #2d2d2d;
+  border: 2px solid var(--s-blue1);
+  background-color: var(--s-gray-2);
+  text-decoration: none;
 }
 
 .restart-button,
 .start-button {
-  color: #68cefe;
+  color: var(--s-blue1);
 }
 
-.start-button-disabled {
+.button-disabled {
   color: #555;
   cursor: default;
   border: 2px solid #37708a;
@@ -154,12 +175,89 @@ h3 {
   margin: 10px;
   font-size: 30px;
   font-weight: 500;
-  color: #68cefe;
+  color: var(--s-blue1);
   padding: 2px 15px;
-  border: 2px solid #68cefe;
-  background-color: #2d2d2d;
+  border: 2px solid var(--s-blue1);
+  background-color: var(--s-gray-2);
   border-radius: 10px;
+  display: block;
+  text-decoration: none;
 }
+
+.select-size a.active {
+  border: 2px solid var(--s-orange);
+  color: var(--s-orange);
+}
+
+.input-container {
+  width: 100%;
+  display: block;
+  background-color: var(--s-gray-2);
+  margin: 20px 0;
+  padding: 20px;
+}
+
+.inner-input-container {
+  width: 50%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.email-container {
+  height: 100%;
+  float: left;
+}
+
+.login-container {
+  height: 100%;
+  display: table;
+  float: right;
+}
+
+.submit-button,
+.input-info {
+  border-radius: 10px;
+  width: 300px;
+  height: 50px;
+  margin: 10px 10px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  border: 2px solid #000;
+  color: var(--s-blue1);
+  text-align: center;
+  font-size: 25px;
+}
+
+.submit-button {
+  width: 200px;
+  height: 60px;
+  transition: width 0.3s;
+}
+
+.submit-button:hover {
+  background-color: var(--s-blue1);
+  color: black;
+  width: 250px;
+}
+
+.input-menu {
+  border: 4px solid var(--s-blue1);
+  border-radius: 15px;
+  padding: 50px 20px;
+  background-color: var(--s-gray-2);
+}
+
+.hello-label {
+  font-size: 50px;
+  color: var(--s-blue1);
+}
+
+.hello-label span {
+  color: var(--s-orange);
+  font-weight: 600;
+}
+
 /*--- End UI ---*/
 
 /* --- Message ---*/
@@ -209,7 +307,7 @@ td {
   float: left;
   width: 30px;
   height: 30px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 0 solid;
   position: relative;
   text-align: center;
@@ -229,23 +327,24 @@ td {
 }
 
 .selected {
-  background-color: #68ef00;
+  background-color: var(--s-green1);
   border-radius: 0px;
 }
 
 .selected:hover {
-  background-color: #af3;
+  background-color: var(--s-green2);
+  border-radius: 8px;
   transform: scale(1.2);
   z-index: 5;
 }
 
 .unSelected {
-  background-color: #55f;
+  background-color: var(--s-blue3);
   border-radius: 9px;
 }
 
 .unSelected:hover {
-  background-color: #22f;
+  background-color: var(--s-blue2);
   transform: scale(1.2);
   z-index: 5;
 }
@@ -260,7 +359,7 @@ td {
   padding: 20px;
 }
 
-.row {
+.simple-row {
   clear: both;
 }
 
@@ -302,31 +401,31 @@ td {
 }
 
 .emptyCell {
-  background-color: #55f;
+  background-color: var(--s-blue3);
 }
 
 .emptyCell:hover {
-  background-color: #22f;
+  background-color: var(--s-blue2);
   transform: scale(1.2);
   z-index: 5;
 }
 
 .missCell {
-  background-color: #fff;
+  background-color: var(--s-transparent);
 }
 
 .missCell:hover {
-  background-color: #fff;
+  background-color: var(--s-transparent);
   transform: scale(1) !important;
 }
 
 .undetectedCell {
-  background-color: #8c4;
+  background-color: var(--s-green1);
   border-radius: 5px !important;
 }
 
 .hitCell {
-  background-color: #f00;
+  background-color: var(--s-orange);
   border-radius: 5px !important;
 }
 
