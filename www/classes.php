@@ -73,7 +73,7 @@ class SeaBattle
             $this->winner = 1;
             return true;
         } else if ($countEnemy == $this->SHIPS_CELLS_TO_WIN) {
-            $this->winner = 2;
+            $this->winner = 0;
             return true;
         } else
             return false;
@@ -237,9 +237,9 @@ class Bot
         $countOfCorrectPositions = 0;
         $secondMask = array();
         // Заполняет secondMask массивом точек, которые могут стать стартовыми для текущего корабля
-        print_r("Высота ".$this->fieldHeight."\n");
-        print_r("Ширина ".$this->fieldWidth."\n");
-        print_r("Field Start \n");
+        //print_r("Высота ".$this->fieldHeight."\n");
+        //print_r("Ширина ".$this->fieldWidth."\n");
+        //print_r("Field Start \n");
         for ($y = 0; $y < $this->fieldHeight; $y++) {
             $secondMask[$y] = array();
             for ($x = 0; $x < $this->fieldWidth; $x++) {
@@ -248,31 +248,31 @@ class Bot
                     && (($this->checker->CheckFreeLine($this->fieldMask, $y, $x, $y + ($shipLenght-1), $x) && $y + $shipLenght <= $this->fieldHeight) 
                         || ($this->checker->CheckFreeLine($this->fieldMask, $y, $x, $y, $x + ($shipLenght-1)) && $x + $shipLenght <= $this->fieldWidth))
                 ) {
-                    print_r("   true\n");
+                    //print_r("   true\n");
                     $secondMask[$y][$x] = false;
                 } else {
-                    print_r("   false\n");
+                    //print_r("   false\n");
                     $secondMask[$y][$x] = true;
                 }
             }
         }
-        print_r("Field End \n");
-        $this->checker->PrintTest($secondMask);
+        //print_r("Field End \n");
+        //$this->checker->PrintTest($secondMask);
         // Рекурсивный цикл запонения кораблей
         //print_r($this->FreeMaskToArray($secondMask));
         $result = false;
         //print_r($this->shipsArray);
         do {
             $countOfCorrectPositions = count($this->FreeMaskToArray($secondMask));
-            print_r("\nВозможных позиций - ".$countOfCorrectPositions."\n");
+            //print_r("\nВозможных позиций - ".$countOfCorrectPositions."\n");
             //print_r($this->FreeMaskToArray($secondMask));
             if ($countOfCorrectPositions > 0) {
                 $buf = $this->FreeMaskToArray($secondMask);
                 $randPos = rand(0, count($buf) - 1);
                 $startY = $buf[$randPos][0];
                 $startX = $buf[$randPos][1];
-                print_r("Выбранная позиция: ".$randPos."\n");
-                print_r("Координаты точки (".$startY.";".$startX.")\n");
+                //print_r("Выбранная позиция: ".$randPos."\n");
+                //print_r("Координаты точки (".$startY.";".$startX.")\n");
                 // Вставляет в горизонтальном направлении и меняет маску
                 $choice = 0;
                 // Выбор вертикально или горизонтально. Если не влезает то в маске закрыть эту позицию
@@ -286,7 +286,7 @@ class Bot
                 } else if ($this->checker->CheckFreeLine($firstMask, $startY, $startX, $startY + ($shipLenght-1), $startX) && $startY + ($shipLenght) <= $this->fieldHeight) {
                     $choice = 1;
                 }
-                print_r("\nВыбор расстановки - ".$choice."\n");
+                //print_r("\nВыбор расстановки - ".$choice."\n");
             switch ($choice) {
                 case 3:
                     $rand = rand(0, 1);
@@ -468,19 +468,19 @@ class Checker
         $count = 0;
         for ($y = $startY; $y <= $endY; $y++) {
             for ($x = $startX; $x <= $endX; $x++) {
-                print_r("\n(".$y.";".$x.") => ".($field[$y][$x]? "1" : "0"));
+                //print_r("\n(".$y.";".$x.") => ".($field[$y][$x]? "1" : "0"));
                 if ($field[$y][$x] == true) {
                     $count++;
                 }
 
             }
         }
-        print_r("\nОриентация: = ".($startX==$endX? "Y" : "X")."");
+        //print_r("\nОриентация: = ".($startX==$endX? "Y" : "X")."");
         return $count == 0;
     }
 
     public function PrintTest($field){
-        print("\n--------------");
+        //print("\n--------------");
         for ($y = 0; $y < count($field); $y++) {
             print("\n");
             for ($x = 0; $x < count($field[$y]); $x++) {
@@ -501,9 +501,5 @@ class Checker
 
     public function GetShipsArray(){
         return $this->shipsArray;
-    }
-
-    public function Print1(){
-        print_r("Hui");
     }
 }

@@ -10,7 +10,7 @@ $messageEnd = "";
 
 if ($email != null) {
     if (($password1 == $password2) && ($password1 != null)) {
-        include_once "db_connect.php";
+        include_once "db_connect_pdo.php";
 
         $arr = $pdo->prepare('SELECT * FROM account WHERE email = ? OR login = ?');     // Поиск аккаунта с такой почтой
         $arr->execute(array($email, $login));

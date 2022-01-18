@@ -42,7 +42,7 @@
                 ?>
             <li>
                 <div class="dropdown">
-                    <a class="dropbtn">Аккаунт</a>
+                    <a class="dropbtn">Мой кабинет</a>
                     <div class="dropdown-content">
                         <div><a href="account.php">Моя Страница</a></div>
                         <div><a>Друзья</a></div>

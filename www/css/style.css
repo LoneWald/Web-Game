@@ -100,6 +100,10 @@ input::placeholder {
   transform: scale(1.2);
 }
 
+.dropbtn {
+  cursor: default;
+}
+
 .dropdown {
 }
 
@@ -436,4 +440,43 @@ td {
 }
 /*--- End game.php ---*/
 
-/*--- Index ---*/
+/*--- Account ---*/
+.avatar {
+  width: 200px;
+  height: 200px;
+  border: 10px solid var(--s-orange);
+  border-radius: 20px;
+}
+
+.profile-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+}
+
+.profile-name p {
+  font-size: 70px;
+  color: var(--s-blue1);
+}
+
+.statistics {
+  padding: 20px 0px;
+  border: 3px solid var(--s-orange);
+  border-radius: 15px;
+}
+
+.win-rate-label p,
+.statistics-label p {
+  font-size: 30px;
+  color: var(--s-orange);
+}
+
+.win-rate-value p,
+.statistics-value p {
+  font-size: 30px;
+  color: var(--s-blue1);
+  margin-bottom: 0;
+}

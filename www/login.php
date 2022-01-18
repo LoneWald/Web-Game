@@ -14,12 +14,15 @@ if ($password != null || ($_COOKIE["login"] != null && $_COOKIE["password"] != n
 
 function check($login, $password, &$messageStart, &$messageEnd)
 {
-    include_once "db_connect.php";
+    include_once "db_connect_pdo.php";
+    include("db_classes.php");
+
     $sql = $pdo->prepare('SELECT * FROM account WHERE (login = ? OR email = ?) AND password = ?');     // Поиск аккаунта с такой почтой
     $sql->execute(array($login, $login, $password));
     if ($sql->rowCount() == 1) {                                                        // Если такой только 1
         $arr = $sql->fetch(PDO::FETCH_ASSOC);   // Получить строку из response
-        setcookie("login", $arr["login"]);      // Сохраняем куки
+        setcookie("currentAccount", json_encode(new Account($arr["id"], $arr["login"], $arr["password"], $arr["email"], $arr["nickname"])));      // Сохраняем куки
+        setcookie("login", $arr["login"]);
         setcookie("password", $arr["password"]);
         header("Location: account.php");    
         $messageStart = "Добро";
